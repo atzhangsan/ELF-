@@ -28,14 +28,14 @@ ar -o hello.o hello.s
 00000018  00000501 R_386_32          00000000   .rodata
 0000001d  00000a02 R_386_PC32        00000000   puts
 ```
-注：offset是节section（本节.text）中 符号 位置的偏移量， 节头开始数offset字节后是 符号 位置
-   info 由两部分组成(一部分是TYPE，为底1个字节，8bit；另一部分是符号所在节序号，高3个字节）
-   验证TYPE，第一条中的01是类型，类型为_386_32，绝对地址。
-            第二条中的02是类型，类型为R_386_PC32，相对PC寻址。
-   验证符号所在节的序号：
-          第一个条目中序号为05，第二条条目序号为a 
-          readelf —S hello.o
-          There are 13 section headers, starting at offset 0x13c:
+注：offset是节section（本节.text）中 符号 位置的偏移量， 节头开始数offset字节后是 符号 位置<br>
+   info 由两部分组成(一部分是TYPE，为底1个字节，8bit；另一部分是符号所在节序号，高3个字节）<br>
+   验证TYPE，第一条中的01是类型，类型为_386_32，绝对地址。<br>
+            第二条中的02是类型，类型为R_386_PC32，相对PC寻址。<br>
+   验证符号所在节的序号：<br>
+          第一个条目中序号为05，第二条条目序号为a <br>
+          readelf —S hello.o<br>
+          There are 13 section headers, starting at offset 0x13c:<br>
 ```
 Section Headers:
   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
@@ -53,10 +53,10 @@ Section Headers:
   [11] .symtab           SYMTAB          00000000 000344 0000b0 10     12   9  4
   [12] .strtab           STRTAB          00000000 0003f4 000013 00      0   0  1
 ```
-查表的05为.rodata节序号，
-查表a为[10].shstrtab，还不知道为什么定位到这里，以前没有注意过，以后再分析puts这个。
+查表的05为.rodata节序号，<br>
+查表a为[10].shstrtab，还不知道为什么定位到这里，以前没有注意过，以后再分析puts这个。<br>
 
-贴出来，反汇编代码objdump -x -d hello.o
+贴出来，反汇编代码objdump -x -d hello.o<br>
 ```
 Disassembly of section .text:
 
@@ -87,7 +87,7 @@ Disassembly of section .text:
   
   然后看重定位的算法，csapp第7.7节
 ```  
-  重定位符号引用
+  重定位符号引用<br>
 一种重定位算法的伪代码如下所示：
 ```
   foreach section s {
