@@ -1,6 +1,7 @@
 准备记录一系列的关于elf文件的分析，今天分析第一部分，rel.text.重定位
 
 一、代码
+```
 #include <stdio.h>
 
 int main() 
@@ -9,13 +10,15 @@ int main()
     printf("xxooxxooxxxooo\n");
     return 0;
 }
-
+```
 二、编译(分别在ubuntu12.04 和centos7.04上进行）
+```
 gcc -Og -S hello.c
 ar -o hello.o hello.s
-
+```
 三、分析
   1、分析32 bit下
+  ```
   >: readelf -r hello.o
   
    Relocation section '.rel.text' at offset 0x408 contains 4 entries:
@@ -24,6 +27,7 @@ ar -o hello.o hello.s
 00000011  00000a02 R_386_PC32        00000000   puts
 00000018  00000501 R_386_32          00000000   .rodata
 0000001d  00000a02 R_386_PC32        00000000   puts
+```
 注：offset是节section（本节.text）中 符号 位置的偏移量， 节头开始数offset字节后是 符号 位置
    info 由两部分组成(一部分是TYPE，为底1个字节，8bit；另一部分是符号所在节序号，高3个字节）
    验证TYPE，第一条中的01是类型，类型为_386_32，绝对地址。
@@ -53,6 +57,7 @@ Section Headers:
 查表a为[10].shstrtab，还不知道为什么定位到这里，以前没有注意过，以后再分析puts这个。
 
 贴出来，反汇编代码objdump -x -d hello.o
+```
 Disassembly of section .text:
 
 00000000 <main>:
@@ -71,8 +76,9 @@ Disassembly of section .text:
   21:	b8 00 00 00 00       	mov    $0x0,%eax
   26:	c9                   	leave  
   27:	c3                   	ret   
-
+```
  重点说明的是9行和15行是不同的 第一次是将   $0x0,(%esp)，第二次是 $0xd,(%esp)，这个0xd是代表了第二个字符串的位置
+ ```
  readelf -x .rodata hello.o
  
  Hex dump of section '.rodata':
@@ -80,10 +86,10 @@ Disassembly of section .text:
   0x00000010 6f78786f 6f787878 6f6f6f00                   oxxooxxxooo.
   
   然后看重定位的算法，csapp第7.7节
-  
+```  
   重定位符号引用
 一种重定位算法的伪代码如下所示：
-
+```
   foreach section s {
     foreach relocation entry r {
         refptr = s + r.offset;//符号所在text的地址位置位置
@@ -95,4 +101,5 @@ Disassembly of section .text:
             *refptr = (unsigned)(ADDR(r.symbol) + *refptr);//符号所在的text的地址位置内存储的数值，本里中的0x0 ，0xd（第二次）
     }
 }
+```
 注：通过这中算法确定了，符号在rodata节中的位置，从而让链接器将对应的地址写到text代码中，链接器能写text中内容，生成exec执行文件，映射到内存中就有只读属性了  
