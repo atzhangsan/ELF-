@@ -32,7 +32,7 @@ ar -o hello.o hello.s
           第一个条目中序号为05，第二条条目序号为a 
           readelf —S hello.o
           There are 13 section headers, starting at offset 0x13c:
-'''
+```
 Section Headers:
   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
   [ 0]                   NULL            00000000 000000 000000 00      0   0  0
@@ -48,7 +48,7 @@ Section Headers:
   [10] .shstrtab         STRTAB          00000000 0000dc 00005f 00      0   0  1
   [11] .symtab           SYMTAB          00000000 000344 0000b0 10     12   9  4
   [12] .strtab           STRTAB          00000000 0003f4 000013 00      0   0  1
-'''
+```
 查表的05为.rodata节序号，
 查表a为[10].shstrtab，还不知道为什么定位到这里，以前没有注意过，以后再分析puts这个。
 
